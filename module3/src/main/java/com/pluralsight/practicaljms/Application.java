@@ -8,6 +8,7 @@ import javax.jms.*;
  *  0.1.0 Uses Generic Session Interface
  *  0.1.1 Uses QueueSession Interface
  *  0.1.2 Uses Generic Session Interface for topic
+ *  0.1.3 Uses Topic Session Interface for topic
  */
 public class Application {
 
@@ -23,6 +24,12 @@ public class Application {
         );
     }
 
+    public TopicConnectionFactory createTopicConnectionFactory() {
+        return new ActiveMQConnectionFactory(
+                "tcp://localhost:61616"
+        );
+    }
+
     public Connection createConnection(ConnectionFactory cf)
             throws JMSException {
         return cf.createConnection();
@@ -31,6 +38,11 @@ public class Application {
     public QueueConnection createQueueConnection(QueueConnectionFactory cf)
             throws JMSException {
         return cf.createQueueConnection();
+    }
+
+    public TopicConnection createTopicConnection(TopicConnectionFactory cf)
+            throws JMSException {
+        return cf.createTopicConnection();
     }
 
     public Session createSession(Connection connection)
@@ -43,11 +55,16 @@ public class Application {
         return connection.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
     }
 
+    public TopicSession createTopicSession(TopicConnection connection)
+            throws JMSException {
+        return connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
+    }
+
     public static void main( String... args ) throws Exception {
         Application app = new Application();
-        ConnectionFactory cf = app.createConnectionFactory();
-        Connection conn = app.createConnection(cf);
-        Session session = app.createSession(conn);
+        TopicConnectionFactory cf = app.createTopicConnectionFactory();
+        TopicConnection conn = app.createTopicConnection(cf);
+        TopicSession session = app.createTopicSession(conn);
         app.sendTextMessageToTopic("Test Message", session);
         session.close();
         conn.close();
@@ -75,6 +92,14 @@ public class Application {
         TextMessage msg = session.createTextMessage(message);
         MessageProducer messageProducer = session.createProducer(queue);
         messageProducer.send(msg);
+    }
+
+    public void sendTextMessageToTopic(String message,
+                                       TopicSession session) throws JMSException {
+        Topic topic = session.createTopic("TEST_TOPIC");
+        TextMessage msg = session.createTextMessage(message);
+        TopicPublisher topicPublisher = session.createPublisher(topic);
+        topicPublisher.send(msg);
     }
 
 }
