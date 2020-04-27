@@ -7,6 +7,7 @@ import javax.jms.*;
 /**
  *  0.1.0 Uses Generic Session Interface
  *  0.1.1 Uses QueueSession Interface
+ *  0.1.2 Uses Generic Session Interface for topic
  */
 public class Application {
 
@@ -44,10 +45,10 @@ public class Application {
 
     public static void main( String... args ) throws Exception {
         Application app = new Application();
-        QueueConnectionFactory cf = app.createQueueConnectionFactory();
-        QueueConnection conn = app.createQueueConnection(cf);
-        QueueSession session = app.createQueueSession(conn);
-        app.sendTextMessageToQueue("Another Message", session);
+        ConnectionFactory cf = app.createConnectionFactory();
+        Connection conn = app.createConnection(cf);
+        Session session = app.createSession(conn);
+        app.sendTextMessageToTopic("Test Message", session);
         session.close();
         conn.close();
     }
@@ -67,4 +68,13 @@ public class Application {
         QueueSender messageProducer = session.createSender(queue);
         messageProducer.send(msg);
     }
+
+    public void sendTextMessageToTopic(String message,
+                                       Session session) throws JMSException {
+        Topic queue = session.createTopic("TEST_TOPIC");
+        TextMessage msg = session.createTextMessage(message);
+        MessageProducer messageProducer = session.createProducer(queue);
+        messageProducer.send(msg);
+    }
+
 }
