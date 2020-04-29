@@ -14,6 +14,7 @@ import javax.jms.*;
  * 0.2.2 Consuming messages from a Queue using listener (preferred way)
  * 0.2.3 Consuming messages from a Topic using listener
  * 0.2.4 Consuming messages from a Topic with Durable subscription using listener
+ * 0.2.5 Set priority 0-9, 9 highest, all messages, default to 4. 5-9 expedited
  */
 public class Application {
 
@@ -132,6 +133,7 @@ public class Application {
         Topic queue = session.createTopic("TEST_TOPIC");
         TextMessage msg = session.createTextMessage(message);
         MessageProducer messageProducer = session.createProducer(queue);
+        messageProducer.setPriority(9); // 0-9, 9 highest, all messages, default to 4
         messageProducer.send(msg);
     }
 
