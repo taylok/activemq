@@ -17,12 +17,12 @@ public class Application {
 
     public static void main( String... args ) throws Exception {
         Application app = new Application();
-        QueueConnectionFactory cf = app.createQueueConnectionFactory();
-        QueueConnection conn = app.createQueueConnection(cf);
-        QueueSession session = app.createQueueSession(conn);
+        TopicConnectionFactory cf = app.createTopicConnectionFactory();
+        TopicConnection conn = app.createTopicConnection(cf);
+        TopicSession session = app.createTopicSession(conn);
 
-        MessageConsumer consumer = app.consumeFromQueue(session,
-                "TEST_DESTINATION",
+        MessageConsumer consumer = app.consumeFromTopic(session,
+                "TEST_TOPIC",
                 (message -> {
                     // Do something with message
                     TextMessage textMessage = (TextMessage) message;
@@ -138,6 +138,17 @@ public class Application {
             throws JMSException {
         Queue queue = session.createQueue(destination);
         MessageConsumer consumer = session.createConsumer(queue);
+        // Polling for messages using listener
+        consumer.setMessageListener(messageListener);
+        return consumer;
+    }
+
+    public MessageConsumer consumeFromTopic( Session session,
+                                             String destination,
+                                             MessageListener messageListener )
+            throws JMSException {
+        Topic topic = session.createTopic(destination);
+        MessageConsumer consumer = session.createConsumer(topic);
         // Polling for messages using listener
         consumer.setMessageListener(messageListener);
         return consumer;

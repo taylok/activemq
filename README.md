@@ -14,4 +14,6 @@
 
 0.2.2 Consuming messages from a Queue using listener (preferred way)
 
+0.2.3 Consuming messages from a Topic using listener 
+
 
