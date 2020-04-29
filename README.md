@@ -10,4 +10,6 @@
 
 0.2.0 Consuming messages from a Queue using polling (single message)
 
+0.2.1 Consuming messages from a Queue using polling (loop)
+
 
