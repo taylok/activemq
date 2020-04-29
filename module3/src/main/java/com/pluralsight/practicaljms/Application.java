@@ -11,6 +11,7 @@ import javax.jms.*;
  * 0.1.3 Uses Topic Session Interface for topic
  * 0.2.0 Consuming messages from a Queue using polling (single message)
  * 0.2.1 Consuming messages from a Queue using polling (loop)
+ * 0.2.2 Consuming messages from a Queue using listener (preferred way)
  */
 public class Application {
 
@@ -19,12 +20,36 @@ public class Application {
         QueueConnectionFactory cf = app.createQueueConnectionFactory();
         QueueConnection conn = app.createQueueConnection(cf);
         QueueSession session = app.createQueueSession(conn);
+
+        MessageConsumer consumer = app.consumeFromQueue(session,
+                "TEST_DESTINATION",
+                (message -> {
+                    // Do something with message
+                    TextMessage textMessage = (TextMessage) message;
+                    try {
+                        System.out.println(textMessage.getText());
+                    } catch (JMSException e) {
+                        e.printStackTrace();
+                    }
+                }));
+
         conn.start();
 
-        app.consumeFromQueue(session, "TEST_DESTINATION");
-
-        session.close();
-        conn.close();
+        // Free resources
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                try {
+                    super.run();
+                    conn.stop();
+                    consumer.close();
+                    session.close();
+                    conn.close();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
     }
 
     public ConnectionFactory createConnectionFactory() {
@@ -107,24 +132,15 @@ public class Application {
         topicPublisher.send(msg);
     }
 
-    public void consumeFromQueue( Session session, String destination )
+    public MessageConsumer consumeFromQueue( Session session,
+                                             String destination,
+                                             MessageListener messageListener )
             throws JMSException {
         Queue queue = session.createQueue(destination);
         MessageConsumer consumer = session.createConsumer(queue);
-        // Polling for messages until some condition, as they arrive on Q will be consumed here
-        // Logic put for quitting loop if message received = "quit"
-        boolean someCondition = true;
-        while (someCondition) {
-            Message message = consumer.receive(500);
-            if (null != message) {
-                // Cast to TextMessage to get just the text
-                TextMessage textMessage = (TextMessage) message;
-                System.out.println(textMessage.getText());
-                if (textMessage.getText().equals("quit")) {
-                    someCondition = false;
-                }
-            }
-        }
+        // Polling for messages using listener
+        consumer.setMessageListener(messageListener);
+        return consumer;
     }
 }
 

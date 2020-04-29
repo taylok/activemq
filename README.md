@@ -12,4 +12,6 @@
 
 0.2.1 Consuming messages from a Queue using polling (loop)
 
+0.2.2 Consuming messages from a Queue using listener (preferred way)
+
 
