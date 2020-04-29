@@ -12,45 +12,56 @@ import javax.jms.*;
  * 0.2.0 Consuming messages from a Queue using polling (single message)
  * 0.2.1 Consuming messages from a Queue using polling (loop)
  * 0.2.2 Consuming messages from a Queue using listener (preferred way)
+ * 0.2.3 Consuming messages from a Topic using listener
+ * 0.2.4 Consuming messages from a Topic with Durable subscription using listener
  */
 public class Application {
 
-    public static void main( String... args ) throws Exception {
+    public static void main(String... args) throws Exception {
         Application app = new Application();
-        TopicConnectionFactory cf = app.createTopicConnectionFactory();
-        TopicConnection conn = app.createTopicConnection(cf);
-        TopicSession session = app.createTopicSession(conn);
-
-        MessageConsumer consumer = app.consumeFromTopic(session,
-                "TEST_TOPIC",
-                (message -> {
-                    // Do something with message
-                    TextMessage textMessage = (TextMessage) message;
-                    try {
-                        System.out.println(textMessage.getText());
-                    } catch (JMSException e) {
-                        e.printStackTrace();
-                    }
-                }));
-
+        ConnectionFactory cf = app.createConnectionFactory();
+        Connection conn = app.createConnection(cf);
+        conn.setClientID("MyUniqueClientId");
+        Session session = app.createSession(conn);
+        TopicSubscriber topicSubscriber =
+                app.consumeFromTopic(session,
+                        "TEST_TOPIC",
+                        (message -> {
+                            if (message instanceof TextMessage) {
+                                TextMessage txtMsg = (TextMessage)message;
+                                try {
+                                    System.out.println(txtMsg.getText());
+                                } catch (JMSException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }));
         conn.start();
 
-        // Free resources
+        //Free resources
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
                 try {
                     super.run();
                     conn.stop();
-                    consumer.close();
+                    topicSubscriber.close();
                     session.close();
                     conn.close();
+
+                    //If you are finished with the subscription
+                    session.unsubscribe("test-subscription");
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
         });
+        while (true) {
+            app.sendTextMessageToTopic("Test Message", session);
+        }
+
     }
+
 
     public ConnectionFactory createConnectionFactory() {
         return new ActiveMQConnectionFactory(
@@ -143,13 +154,13 @@ public class Application {
         return consumer;
     }
 
-    public MessageConsumer consumeFromTopic( Session session,
-                                             String destination,
-                                             MessageListener messageListener )
+    public TopicSubscriber consumeFromTopic(Session session,
+                                            String destination,
+                                            MessageListener messageListener)
             throws JMSException {
         Topic topic = session.createTopic(destination);
-        MessageConsumer consumer = session.createConsumer(topic);
-        // Polling for messages using listener
+        TopicSubscriber consumer = session.createDurableSubscriber(topic,
+                "test-subscription");
         consumer.setMessageListener(messageListener);
         return consumer;
     }

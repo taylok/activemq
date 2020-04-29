@@ -15,5 +15,10 @@
 0.2.2 Consuming messages from a Queue using listener (preferred way)
 
 0.2.3 Consuming messages from a Topic using listener 
+* Only messages that were put to Topic while client is connected can be received
+
+0.2.4 Consuming messages from a Topic with Durable subscription using listener
+* We can then reconnect our client and pick up the messages 
+
 
 
