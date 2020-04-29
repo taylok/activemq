@@ -20,5 +20,6 @@
 0.2.4 Consuming messages from a Topic with Durable subscription using listener
 * We can then reconnect our client and pick up the messages 
 
+0.2.5 Set priority 0-9, 9 highest, all messages, default to 4. 5-9 expedited
 
-
+0.2.6 Set priority, TTL, Delivery mode per message

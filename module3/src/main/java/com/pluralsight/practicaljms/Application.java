@@ -15,6 +15,7 @@ import javax.jms.*;
  * 0.2.3 Consuming messages from a Topic using listener
  * 0.2.4 Consuming messages from a Topic with Durable subscription using listener
  * 0.2.5 Set priority 0-9, 9 highest, all messages, default to 4. 5-9 expedited
+ * 0.2.6 Set priority, TTL, Delivery mode per message
  */
 public class Application {
 
@@ -134,7 +135,12 @@ public class Application {
         TextMessage msg = session.createTextMessage(message);
         MessageProducer messageProducer = session.createProducer(queue);
         messageProducer.setPriority(9); // 0-9, 9 highest, all messages, default to 4
-        messageProducer.send(msg);
+        messageProducer.setTimeToLive(10000); // milliseconds, 0 default - doesn't expire
+        // More likely to send per message variants as parameters
+        messageProducer.send(msg,
+                DeliveryMode.NON_PERSISTENT, // Per message
+                9,  // Priority, Per message
+                20000); // Time-to-live, per message
     }
 
     public void sendTextMessageToTopic( String message,
