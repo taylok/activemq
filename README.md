@@ -6,3 +6,10 @@
     run Example1 to process messages
     scale up additional Example1 instances
 
+0.3.1 Create multiple consumers per JVM
+
+    Run Example2 simulation which puts 100 messages and holds 
+    connection and session in list 
+
+
+
