@@ -35,6 +35,7 @@
 
     Run Example 7
 
-    
-    
+0.3.6 Synchronous Messaging (request/response)
+
+    Run Example 8
  
