@@ -63,14 +63,14 @@ public class SpringBootExample {
         SpringApplication.run(SpringBootExample.class, args);
     }
 
-    @Bean
-    public MessageConverter jacksonMessageConverter() {
-        MappingJackson2MessageConverter converter
-                = new MappingJackson2MessageConverter();
-        converter.setTargetType(MessageType.TEXT);
-        converter.setTypeIdPropertyName("_messageType");
-        return converter;
-    }
+        @Bean
+        public MessageConverter jacksonMessageConverter() {
+            MappingJackson2MessageConverter converter
+                    = new MappingJackson2MessageConverter();
+            converter.setTargetType(MessageType.TEXT);
+            converter.setTypeIdPropertyName("_messageType");
+            return converter;
+        }
 
     @Bean
     @Primary
@@ -80,9 +80,6 @@ public class SpringBootExample {
         JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory);
         jmsTemplate.setDestinationResolver(new DynamicDestinationResolver());
         jmsTemplate.setMessageConverter(jacksonMessageConverter());
-        jmsTemplate.setPriority(4);
-        jmsTemplate.setTimeToLive(30000L);
-        jmsTemplate.setExplicitQosEnabled(true);
         return jmsTemplate;
     }
 

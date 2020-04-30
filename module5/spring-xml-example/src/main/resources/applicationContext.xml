@@ -43,4 +43,17 @@
     <!-- <jee:jndi-lookup id="connectionFactory"
             jndi-name="jms/ConnectionFactory"/> -->
 
+    <bean id="messageConverter"
+          class="org.springframework.jms.support.converter.MappingJackson2MessageConverter">
+        <property name="objectMapper" ref="objectMapper" />
+        <property name="targetType" value="TEXT"/>
+        <property name="typeIdPropertyName" value="_messageType" />
+    </bean>
+
+    <bean id="queueJmsTemplate"
+          class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="cachingConnectionFactory"/>
+        <property name="messageConverter" ref="messageConverter" />
+    </bean>
+
 </beans>
