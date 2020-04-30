@@ -23,5 +23,11 @@
     Run Example 4 - no ordering
     Run Example 5 - ordered
     
+0.3.4 Error handling and attempt reconnect outside of a framework
+
+    Run Example 6
+    Stop Broker
+    Start Broker
+    run MessageSender
 
 
