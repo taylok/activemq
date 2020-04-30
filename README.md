@@ -8,3 +8,7 @@
 
     Review xml and annotation settings again
 
+0.4.2 Sending message to Queue with JMS Template Spring Boot
+
+    Run Spring Boot App
+
