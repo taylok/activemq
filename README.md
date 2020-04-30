@@ -16,4 +16,10 @@
 
     Run Spring Boot App, configured to send orders to topic
     
+0.4.4 Raw operations with JMS Template Spring Boot
+
+    Run Spring Boot App, configured to send email to queue again
+    but using overloaded convertAndSend setting JMSXGroupID
+
+
 

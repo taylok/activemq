@@ -73,6 +73,7 @@ public class SpringBootExample {
         }
 
     @Bean
+    @Primary
     public JmsTemplate queueJmsTemplate(
             @Qualifier("cachingConnectionFactory")
                     ConnectionFactory connectionFactory) {
@@ -83,7 +84,6 @@ public class SpringBootExample {
     }
 
     @Bean
-    @Primary
     public JmsTemplate topicJmsTemplate(
             @Qualifier("cachingConnectionFactory")
                     ConnectionFactory connectionFactory) {
