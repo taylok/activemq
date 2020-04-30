@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jms="http://www.springframework.org/schema/jms"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/jms
+       http://www.springframework.org/schema/jms/spring-jms.xsd
+       http://www.springframework.org/schema/jee
+       http://www.springframework.org/schema/jee/spring-jee.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <context:property-placeholder
+            location="classpath:example.properties"
+            ignore-resource-not-found="true"/>
+
+
+    <bean id="activeMqConnectionFactory"
+          class="org.apache.activemq.ActiveMQConnectionFactory">
+        <constructor-arg index="0"
+                         value="${spring.activemq.url:tcp://localhost:61616}"/>
+        <property name="prefetchPolicy.queuePrefetch" value="1"/>
+        <property name="redeliveryPolicy.useExponentialBackOff" value="true" />
+        <property name="redeliveryPolicy.maximumRedeliveries" value="4"/>
+    </bean>
+
+    <bean id="cachingConnectionFactory"
+          class="org.springframework.jms.connection.CachingConnectionFactory">
+        <property name="targetConnectionFactory" ref="activeMqConnectionFactory" />
+        <property name="reconnectOnException" value="true" />
+        <property name="cacheConsumers" value="true" />
+        <property name="cacheProducers" value="true" />
+    </bean>
+
+    <!--
+        If running Spring inside a JEE container then you
+        should use the connection factory
+        provided by the JEE server using a jndi lookup -->
+    <!-- <jee:jndi-lookup id="connectionFactory"
+            jndi-name="jms/ConnectionFactory"/> -->
+
+</beans>
