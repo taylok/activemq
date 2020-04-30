@@ -11,5 +11,10 @@
     Run Example2 simulation which puts 100 messages and holds 
     connection and session in list 
 
+0.3.2 MessageListener container in Spring Framework (auto detects Broker failure and reconnects)
 
+    Run Example3 
+
+
+    
 
