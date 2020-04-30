@@ -13,8 +13,15 @@
 
 0.3.2 MessageListener container in Spring Framework (auto detects Broker failure and reconnects)
 
-    Run Example3 
+    Run Example3
+    Stop Broker
+    Start Broker
+    run MessageSender 
 
+0.3.3 Message Ordering
 
+    Run Example 4 - no ordering
+    Run Example 5 - ordered
     
+
 
