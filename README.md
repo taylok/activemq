@@ -10,5 +10,10 @@
 
 0.4.2 Sending message to Queue with JMS Template Spring Boot
 
-    Run Spring Boot App
+    Run Spring Boot App, configured to send emails to queue
+
+0.4.3 Sending message to Topic with JMS Template Spring Boot
+
+    Run Spring Boot App, configured to send orders to topic
+    
 
