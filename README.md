@@ -39,3 +39,6 @@
 
     Run Example 8
  
+0.3.7 Dead-Letter-Queue
+
+    Run Example 9
