@@ -30,4 +30,11 @@
     Start Broker
     run MessageSender
 
+0.3.5 Message selector 
+* Generally avoid, use different queues or topics
 
+    Run Example 7
+
+    
+    
+ 
