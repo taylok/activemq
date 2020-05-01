@@ -31,5 +31,8 @@
     DefaultMessageListenerContainer
     Run Spring Boot App, to send and receive messages from Emails queue
  
- 
+0.4.7 Consuming messages asynchronously from a Topic using SpringBoot example 
+
+    Run Spring Boot App, to send and receive messages from Orders topic
+    
 

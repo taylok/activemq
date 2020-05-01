@@ -3,6 +3,7 @@ package com.pluralsight.practicaljms;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.RedeliveryPolicy;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jms.activemq.ActiveMQProperties;
@@ -11,8 +12,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jms.annotation.EnableJms;
+import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
@@ -30,8 +33,8 @@ import javax.jms.ConnectionFactory;
 @Configuration
 public class SpringBootExample {
 
-//    @Value("${clientId:default_clientId}")
-//    String clientId;
+    @Value("${clientId:default_clientId}")
+    String clientId;
 
     public static void main( String... args ) {
         SpringApplication.run(SpringBootExample.class, args);
@@ -73,7 +76,6 @@ public class SpringBootExample {
     }
 
     @Bean
-    @Primary
     public JmsTemplate queueJmsTemplate(
             @Qualifier("cachingConnectionFactory")
                     ConnectionFactory connectionFactory ) {
@@ -84,6 +86,7 @@ public class SpringBootExample {
     }
 
     @Bean
+    @Primary
     public JmsTemplate topicJmsTemplate(
             @Qualifier("cachingConnectionFactory")
                     ConnectionFactory connectionFactory ) {
@@ -94,22 +97,22 @@ public class SpringBootExample {
         return jmsTemplate;
     }
 
-//    @Bean(name = "TopicListenerContainerFactory")
-//    public DefaultJmsListenerContainerFactory exampleListenerContainerFactory(
-//            @Qualifier("activeMqConnectionFactory")
-//                    ConnectionFactory connectionFactory ) throws Exception {
-//        DefaultJmsListenerContainerFactory factory =
-//                new DefaultJmsListenerContainerFactory();
-//        factory.setConnectionFactory(connectionFactory);
-//        factory.setDestinationResolver(new DynamicDestinationResolver());
-//        factory.setConcurrency("1-1");
-//        factory.setClientId(clientId);
-//        factory.setSubscriptionDurable(true);
-//        factory.setCacheLevel(DefaultMessageListenerContainer.CACHE_AUTO);
-//        factory.setMessageConverter(jacksonMessageConverter());
-//        factory.setPubSubDomain(true);
-//        return factory;
-//    }
+    @Bean(name = "TopicListenerContainerFactory")
+    public DefaultJmsListenerContainerFactory exampleListenerContainerFactory(
+            @Qualifier("activeMqConnectionFactory")
+                    ConnectionFactory connectionFactory ) throws Exception {
+        DefaultJmsListenerContainerFactory factory =
+                new DefaultJmsListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setDestinationResolver(new DynamicDestinationResolver());
+        factory.setConcurrency("1-1");
+        factory.setClientId(clientId);
+        factory.setSubscriptionDurable(true);
+        factory.setCacheLevel(DefaultMessageListenerContainer.CACHE_AUTO);
+        factory.setMessageConverter(jacksonMessageConverter());
+        factory.setPubSubDomain(true);
+        return factory;
+    }
 
     @Bean
     @ConfigurationProperties(prefix = "spring.activemq")
