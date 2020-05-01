@@ -25,6 +25,11 @@
 
     Run SpringXmlExample, it blocks on first message so effectively hangs
     but real example another process would put response onto Response Queue
-    
+
+0.4.6 Consuming messages asynchronouly using SpringBoot example
+
+    DefaultMessageListenerContainer
+    Run Spring Boot App, to send and receive messages from Emails queue
+ 
  
 
