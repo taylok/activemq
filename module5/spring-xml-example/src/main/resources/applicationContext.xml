@@ -56,4 +56,12 @@
         <property name="messageConverter" ref="messageConverter" />
     </bean>
 
+    <bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
+
+    <bean id="synchronousMessaging" class="com.pluralsight.practicaljms.SynchronousMessaging"
+          init-method="start"
+          destroy-method="stop">
+        <property name="jmsTemplate" ref="queueJmsTemplate"/>
+    </bean>
+
 </beans>

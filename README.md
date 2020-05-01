@@ -21,5 +21,10 @@
     Run Spring Boot App, configured to send email to queue again
     but using overloaded convertAndSend setting JMSXGroupID
 
+0.4.5 Synchronous Request/Response Spring xml example
 
+    Run SpringXmlExample, it blocks on first message so effectively hangs
+    but real example another process would put response onto Response Queue
+    
+ 
 
