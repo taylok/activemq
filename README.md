@@ -35,4 +35,6 @@
 
     Run Spring Boot App, to send and receive messages from Orders topic
     
+0.4.8 Consuming messages asynchronously from a Topic using SpringBoot example (Raw message)
 
+    Same as before but receive raw message
