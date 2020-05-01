@@ -56,38 +56,39 @@
         <property name="messageConverter" ref="messageConverter" />
     </bean>
 
-    <bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
-    <bean id="emailsJmsTemplate"
+    <bean id="ordersJmsTemplate"
           class="org.springframework.jms.core.JmsTemplate">
         <property name="connectionFactory" ref="cachingConnectionFactory"/>
         <property name="messageConverter" ref="messageConverter" />
-        <property name="defaultDestinationName" value="Emails" />
-        <property name="priority" value="10"/>
-        <!--<property name="timeToLive" value="5000"/>-->
-        <property name="explicitQosEnabled" value="true"/>
+        <property name="pubSubDomain" value="true" />
+        <property name="defaultDestinationName" value="Orders" />
     </bean>
 
-    <bean id="emailGenerator" class="com.pluralsight.practicaljms.EmailGenerator"
+    <bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
+
+    <bean id="orderGenerator"
+          class="com.pluralsight.practicaljms.OrderGenerator"
           init-method="start"
           destroy-method="stop">
-        <property name="jmsTemplate" ref="emailsJmsTemplate" />
+        <property name="jmsTemplate" ref="ordersJmsTemplate" />
     </bean>
 
-    <bean id="emailsMessageListener"
-          class="com.pluralsight.practicaljms.EMailMessageListener"/>
-
+    <bean id="ordersMessageListener"
+          class="com.pluralsight.practicaljms.OrderMessageListener"/>
 
     <jms:listener-container
-            factory-id="queue-container-factory"
+            factory-id="durable-topic-container-factory"
             connection-factory="activeMqConnectionFactory"
             message-converter="messageConverter"
-            concurrency="3-10"
+            concurrency="1-1"
+            client-id="${spring.clientId:default_clientId}"
+            destination-type="durableTopic"
             acknowledge="transacted">
-        <jms:listener destination="Emails"
-                      ref="emailsMessageListener"
+        <jms:listener destination="Orders"
+                      ref="ordersMessageListener"
                       method="onMessage"
+                      subscription="testSubscription"
         />
     </jms:listener-container>
-
 
 </beans>

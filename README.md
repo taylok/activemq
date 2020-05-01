@@ -43,3 +43,6 @@
 
     Run SpringXMLExample
     
+0.4.10 Consuming messages asynchronously from topics using XML Driven configuration
+
+    Run SpringXMLExample
