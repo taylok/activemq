@@ -46,3 +46,7 @@
 0.4.10 Consuming messages asynchronously from topics using XML Driven configuration
 
     Run SpringXMLExample
+
+0.4.11 Consuming messages asynchronously from topics using XML Driven configuration (Raw message)
+
+    Same as before but receive raw message

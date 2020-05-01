@@ -86,7 +86,6 @@
             acknowledge="transacted">
         <jms:listener destination="Orders"
                       ref="ordersMessageListener"
-                      method="onMessage"
                       subscription="testSubscription"
         />
     </jms:listener-container>
