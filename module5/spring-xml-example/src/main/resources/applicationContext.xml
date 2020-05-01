@@ -57,11 +57,37 @@
     </bean>
 
     <bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" />
+    <bean id="emailsJmsTemplate"
+          class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory" ref="cachingConnectionFactory"/>
+        <property name="messageConverter" ref="messageConverter" />
+        <property name="defaultDestinationName" value="Emails" />
+        <property name="priority" value="10"/>
+        <!--<property name="timeToLive" value="5000"/>-->
+        <property name="explicitQosEnabled" value="true"/>
+    </bean>
 
-    <bean id="synchronousMessaging" class="com.pluralsight.practicaljms.SynchronousMessaging"
+    <bean id="emailGenerator" class="com.pluralsight.practicaljms.EmailGenerator"
           init-method="start"
           destroy-method="stop">
-        <property name="jmsTemplate" ref="queueJmsTemplate"/>
+        <property name="jmsTemplate" ref="emailsJmsTemplate" />
     </bean>
+
+    <bean id="emailsMessageListener"
+          class="com.pluralsight.practicaljms.EMailMessageListener"/>
+
+
+    <jms:listener-container
+            factory-id="queue-container-factory"
+            connection-factory="activeMqConnectionFactory"
+            message-converter="messageConverter"
+            concurrency="3-10"
+            acknowledge="transacted">
+        <jms:listener destination="Emails"
+                      ref="emailsMessageListener"
+                      method="onMessage"
+        />
+    </jms:listener-container>
+
 
 </beans>

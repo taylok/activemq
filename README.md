@@ -38,3 +38,8 @@
 0.4.8 Consuming messages asynchronously from a Topic using SpringBoot example (Raw message)
 
     Same as before but receive raw message
+
+0.4.9 Consuming messages asynchronously using XML Driven configuration
+
+    Run SpringXMLExample
+    
