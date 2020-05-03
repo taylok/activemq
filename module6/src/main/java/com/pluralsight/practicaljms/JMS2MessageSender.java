@@ -11,9 +11,5 @@ import java.util.function.Function;
  */
 @Local
 public interface JMS2MessageSender {
-
-    void sendMessage(Destination destination,
-                     Function<JMSContext, Message> messageCreator);
-
-
+    void sendMessage(Destination destination, Function<JMSContext, Message> messageCreator);
 }
