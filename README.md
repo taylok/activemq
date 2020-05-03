@@ -49,3 +49,7 @@
 
     Deploy the jee-example jar to Wildfly
     
+0.5.3 Creating a custom message converter
+
+    Deploy the jee-example jar to Wildfly
+    

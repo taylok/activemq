@@ -31,10 +31,10 @@ public class JMS2EmailSender {
     private Queue emailsQueue;
 
     void sendEmail(String emailAddress,
-                   String subject, String text) {
-        messageSender.sendMessage(emailsQueue, session -> {
+                          String subject, String text) {
+        messageSender.sendMessage(emailsQueue, context -> {
             try {
-                TextMessage textMessage = session.createTextMessage();
+                TextMessage textMessage = context.createTextMessage();
                 textMessage.setStringProperty("emailAddress", emailAddress);
                 textMessage.setStringProperty("subject", subject);
                 textMessage.setText(text);
@@ -45,7 +45,13 @@ public class JMS2EmailSender {
         });
     }
 
-
+    /**
+     * Sending Business Object
+     * @param email
+     */
+    void sendEmail(Email email) {
+        messageSender.sendMessage(emailsQueue, email);
+    }
 
     private ScheduledExecutorService scheduledExecutorService;
 
@@ -54,9 +60,10 @@ public class JMS2EmailSender {
         scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
         scheduledExecutorService.scheduleAtFixedRate(() -> {
-            sendEmail("grant@grantlittle.me",
+            Email email = new Email("grant@grantlittle.me",
                     "Test Message",
                     "This is a test!");
+            sendEmail(email);
             LOG.info("Sent email");
 
         }, 5000L, 5000L, TimeUnit.MILLISECONDS);

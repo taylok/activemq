@@ -4,11 +4,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import javax.ejb.ActivationConfigProperty;
+import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
-import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
-import javax.jms.TextMessage;
 
 /**
  * Created by Grant Little grant@grantlittle.me
@@ -37,20 +36,17 @@ public class MessageReceiver implements MessageListener{
 
     private static final Log LOG = LogFactory.getLog(MessageReceiver.class);
 
+    @EJB
+    MessageConverter messageConverter;
+
     @Override
     public void onMessage(Message message) {
-        try {
-            if (message instanceof TextMessage) {
-                TextMessage textMessage = (TextMessage)message;
-                LOG.info("Recieving email - Subject: "
-                        + textMessage.getStringProperty("subject")
-                        + " To: "
-                        + textMessage.getStringProperty("emailAddress")
-                        + " Content: "
-                        + textMessage.getText());
-            }
-        } catch (JMSException e) {
-            LOG.error(e);
-        }
+        Email email = messageConverter.deserialize(message);
+        LOG.info("Sending email - Subject: "
+                + email.getSubject()
+                + " To: "
+                + email.getEmailAddress()
+                + " Content: "
+                + email.getText());
     }
 }
