@@ -41,4 +41,6 @@
 
     Deploy the jee-example jar to Wildfly
 
+0.5.1 Sending Messages using JMS 2.0
 
+    Deploy the jee-example jar to Wildfly
