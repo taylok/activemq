@@ -22,16 +22,16 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("Duplicates")
 @Singleton
 @Startup
-public class EmailSender {
-    private static Log LOG = LogFactory.getLog(EmailSender.class);
+public class JMS2EmailSender {
+    private static Log LOG = LogFactory.getLog(JMS2EmailSender.class);
 
     @EJB
-    private MessageSender messageSender;
+    private JMS2MessageSender messageSender;
     @Resource(lookup = "java:/jms/queue/EmailsQueue")
     private Queue emailsQueue;
 
     void sendEmail(String emailAddress,
-                          String subject, String text) {
+                   String subject, String text) {
         messageSender.sendMessage(emailsQueue, session -> {
             try {
                 TextMessage textMessage = session.createTextMessage();
