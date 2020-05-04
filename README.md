@@ -53,3 +53,7 @@
 
     Deploy the jee-example jar to Wildfly
     
+0.5.4 Run as Rest endpoint
+
+    Deploy the jee-example jar to Wildfly
+    http://localhost:8080/
